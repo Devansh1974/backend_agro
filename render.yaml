@@ -1,19 +1,24 @@
+# This file tells the Render hosting service how to build and run your application.
 services:
+  # This defines your web service.
   - type: web
-    name: agrohelp-api
+    name: agrohelp-api # You can change this name if you like
     env: python
-    plan: free
+    plan: free # Use the free hosting tier
 
+    # This command installs all the Python libraries from your requirements.txt file.
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
-
+    
+    # This is the command Render will use to start your server.
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port 10000"
+    
+    # This is the crucial part that fixes the error.
+    # It tells Render to install system-level packages.
     build:
       aptPackages:
-        - ffmpeg
-        - libjpeg-dev
-        - zlib1g-dev
-        - libfreetype6-dev
+        - ffmpeg # The audio processing tool that pydub needs
 
+    # This forces Render to use a stable and compatible version of Python.
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.4
