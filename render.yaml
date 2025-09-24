@@ -10,15 +10,17 @@ services:
     buildCommand: "pip install -r requirements.txt"
     
     # This is the command Render will use to start your server.
-    startCommand: "uvicorn main:app --host 0.0.0.0 --port 10000"
-    
-    # This is the crucial part that fixes the error.
-    # It tells Render to install system-level packages.
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT" # Use $PORT from Render, not 10000
+
+    # This is the crucial part that fixes the ffmpeg error (and ensures Pillow builds correctly)
     build:
       aptPackages:
         - ffmpeg # The audio processing tool that pydub needs
+        - libjpeg-dev # Needed for Pillow to process JPEG images
+        - zlib1g-dev # Needed for Pillow to process PNG images
+        - libfreetype6-dev # Font support for Pillow (often good to include)
 
     # This ensures Render uses a compatible version of Python.
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.4
+        value: 3.11.4 # <--- IMPORTANT: Changed to Python 3.11.4
