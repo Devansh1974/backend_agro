@@ -1,26 +1,19 @@
-# This file tells the Render hosting service how to build and run your application.
 services:
-  # This defines your web service.
   - type: web
-    name: agrohelp-api # You can change this name if you like
+    name: agrohelp-api
     env: python
-    plan: free # Use the free hosting tier
+    plan: free
 
-    # This command installs all the Python libraries from your requirements.txt file.
     buildCommand: "pip install -r requirements.txt"
-    
-    # This is the command Render will use to start your server.
     startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
 
-    # This is the crucial part that fixes the ffmpeg error (and ensures Pillow builds correctly)
     build:
       aptPackages:
-        - ffmpeg # The audio processing tool that pydub needs
-        - libjpeg-dev # Needed for Pillow to process JPEG images
-        - zlib1g-dev # Needed for Pillow to process PNG images
-        - libfreetype6-dev # Font support for Pillow (often good to include)
+        - ffmpeg
+        - libjpeg-dev
+        - zlib1g-dev
+        - libfreetype6-dev
 
-    # This ensures Render uses a compatible version of Python.
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.4 # <--- Confirm this is set
+        value: 3.11.4
